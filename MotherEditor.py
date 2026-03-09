@@ -145,7 +145,7 @@ class EB0Constants:
 def recalculate_checksum(data, slot_offset):
     cs = sum(
         int.from_bytes(data[slot_offset+2+i*2 : slot_offset+2+i*2+2], "little")
-        for i in range(327)
+        for i in range(383)
     ) % 0x10000
     cs = (-cs) % 0x10000
     data[slot_offset]     = cs & 0xFF
@@ -512,11 +512,11 @@ class SaveEditorApp:
         if not self.file_data:
             return
         coff   = self.char_offset()
+        base   = self.slot_base()
         errors = []
 
-        self._write_slot(0x1400, coff, errors)
-        self._write_slot(0x1700, coff, errors)
-        recalculate_checksum(self.file_data, 0x1700)
+        self._write_slot(base, coff, errors)
+        recalculate_checksum(self.file_data, base)
 
         if errors:
             messagebox.showwarning(
